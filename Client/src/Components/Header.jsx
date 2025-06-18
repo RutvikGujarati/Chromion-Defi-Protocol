@@ -81,55 +81,74 @@ const Header = () => {
   };
 
   return (
-    <header className="header fixed-top">
-      <div className="container d-flex align-items-center justify-content-between py-3">
-        {/* Left side - DApp Name */}
-        <div>
-          <NavLink to="/" className="logo-link text-decoration-none">
-            <span className="logo-text">NovaDapp</span>
-          </NavLink>
-        </div>
-
-        {/* Center - Navigation Links */}
-        <nav className="d-flex gap-4">
-          <NavLink
-            to="/"
-            className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
-          >
-            Home
-          </NavLink>
-          <NavLink
-            to="/about"
-            className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
-          >
-            About
-          </NavLink>
-        </nav>
-
-        {/* Right side - Wallet Info */}
-        <div className="d-flex align-items-center gap-3">
-          {walletInfo.isConnected && (
-            <span className="text-white small">{walletInfo.address}</span>
-          )}
-          <button
-            className="wallet-button btn btn-outline-light"
-            onClick={handleConnectWallet}
-          >
-            {walletInfo.isConnected ? "Disconnect Wallet" : "Connect Wallet"}
-          </button>
-        </div>
-
-        {/* Wallet Modal */}
-        {showWalletModal && (
-          <WalletModal
-            address={walletInfo.address}
-            balance={walletInfo.balance}
-            error={error}
-            onClose={() => setShowWalletModal(false)}
-          />
-        )}
-      </div>
-    </header>
+	<header className="header fixed-top">
+	<div className="container-fluid px-3">
+	  <div className="d-flex flex-wrap align-items-center justify-content-between py-3">
+		{/* Left side - Logo */}
+		<div className="flex-shrink-0">
+		  <NavLink to="/" className="logo-link text-decoration-none">
+			<span className="logo-text">NovaDapp</span>
+		  </NavLink>
+		</div>
+  
+		{/* Center - Nav Links */}
+		<nav className="d-none d-md-flex gap-4">
+		  <NavLink
+			to="/"
+			className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+		  >
+			Home
+		  </NavLink>
+		  <NavLink
+			to="/about"
+			className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+		  >
+			About
+		  </NavLink>
+		</nav>
+  
+		{/* Right - Wallet */}
+		<div className="d-flex align-items-center gap-2 flex-wrap">
+		  {walletInfo.isConnected && (
+			<span className="text-white small">{walletInfo.address}</span>
+		  )}
+		  <button
+			className="wallet-button btn btn-outline-light"
+			onClick={handleConnectWallet}
+		  >
+			{walletInfo.isConnected ? "Disconnect" : "Connect Wallet"}
+		  </button>
+		</div>
+  
+		{/* Mobile Nav Links */}
+		<div className="w-100 d-md-none mt-3 d-flex justify-content-center gap-4">
+		  <NavLink
+			to="/"
+			className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+		  >
+			Home
+		  </NavLink>
+		  <NavLink
+			to="/about"
+			className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+		  >
+			About
+		  </NavLink>
+		</div>
+	  </div>
+	</div>
+  
+	{/* Wallet Modal */}
+	{showWalletModal && (
+	  <WalletModal
+		address={walletInfo.address}
+		balance={walletInfo.balance}
+		error={error}
+		onClose={() => setShowWalletModal(false)}
+	  />
+	)}
+  </header>
+  
   );
 };
 
