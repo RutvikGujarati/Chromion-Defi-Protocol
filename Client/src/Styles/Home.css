@@ -1,0 +1,57 @@
+.glass-card {
+  background: rgba(18, 18, 30, 0.7);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 25px rgba(0, 212, 255, 0.05);
+  color: white;
+}
+
+.gradient-text {
+  background: linear-gradient(45deg, #00d4ff, #ff00ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: bold;
+}
+
+.btn-gradient {
+  background: linear-gradient(135deg, #00d4ff, #ff00ff);
+  border: none;
+}
+
+.swap-btn {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #4b6cb7, #182848);
+  border: none;
+  color: white;
+  transition: transform 0.3s ease;
+}
+
+.swap-btn:hover {
+  transform: rotate(180deg);
+}
+.custom-select {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.custom-select:focus {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: #00d4ff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 212, 255, 0.25);
+  outline: none;
+}
+
+.custom-select option {
+  background-color: #121212; /* dropdown background */
+  color: #fff;
+}

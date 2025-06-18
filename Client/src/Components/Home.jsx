@@ -1,105 +1,69 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import "../Styles/Home.css"; // for custom styles
 
 const Home = () => {
   const [fromChain, setFromChain] = useState("Avalanche Fuji");
   const [toChain, setToChain] = useState("Ethereum Sepolia");
   const [amount, setAmount] = useState("");
+  const [toAddress] = useState("0x14...918c"); // Display only
+
+  const chains = ["Avalanche Fuji", "Ethereum Sepolia"];
 
   const handleSwap = () => {
     setFromChain(toChain);
     setToChain(fromChain);
   };
 
-  const chains = ["Avalanche Fuji", "Ethereum Sepolia"];
-
   return (
-    <div className="d-flex justify-content-center align-items-center min-vh-100 bg-dark text-light">
-      <div
-        className="card p-4"
-        style={{
-          maxWidth: "600px",
-          background: "rgba(255, 255, 255, 0.1)",
-          borderRadius: "16px",
-          backdropFilter: "blur(15px)",
-          WebkitBackdropFilter: "blur(15px)",
-          border: "1px solid rgba(255, 255, 255, 0.2)",
-          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.37)",
-          color: "white",
-        }}
-      >
-        <h4 className="text-center mb-4">Bridge</h4>
+    <div className="d-flex justify-content-center align-items-center min-vh-100 bg-dark text-light px-3">
+      <div className="glass-card p-4 w-100" style={{ maxWidth: "600px" }}>
+        <h4 className="text-center mb-4 fw-bold gradient-text">Bridge</h4>
 
-        {/* Top Row: Input + From Chain */}
-        <div className="row mb-3">
-          <div className="col-md-5">
-            <label className="form-label">Amount</label>
+        <div className="mb-4">
+          <label className="form-label">Send</label>
+          <div className="input-group mb-3">
             <input
               type="number"
-              className="form-control"
+              className="form-control bg-transparent border-secondary text-light"
               placeholder="Enter amount"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
             />
-          </div>
-          <div className="col-md-7">
-            <label className="form-label">From Chain</label>
-            <select
-              className="form-select"
-              value={fromChain}
-              onChange={(e) => setFromChain(e.target.value)}
-            >
-              {chains.map((chain) => (
-                <option key={chain} value={chain}>
-                  {chain}
-                </option>
-              ))}
+            <select className="form-select custom-select" defaultValue="ETH">
+              <option>ETH</option>
+              <option>WETH</option>
             </select>
           </div>
+          <select
+            className="form-select custom-select "
+            value={fromChain}
+            onChange={(e) => setFromChain(e.target.value)}
+          >
+            {chains.map((chain) => (
+              <option key={chain} value={chain}>
+                {chain}
+              </option>
+            ))}
+          </select>
         </div>
 
-        {/* Arrow */}
-        <div className="d-flex justify-content-center my-3">
+        <div className="d-flex justify-content-center my-4">
           <button
-            className="btn border-0 shadow-sm d-flex align-items-center justify-content-center"
+            className="btn swap-btn rounded-circle d-flex align-items-center justify-content-center"
             onClick={handleSwap}
             title="Swap chains"
-            style={{
-              width: "48px",
-              height: "48px",
-              borderRadius: "50%",
-              background: "linear-gradient(135deg, #4b6cb7, #182848)",
-              color: "white",
-              fontSize: "1.25rem",
-              transition: "transform 0.3s ease",
-            }}
-            onMouseOver={(e) =>
-              (e.currentTarget.style.transform = "rotate(180deg)")
-            }
-            onMouseOut={(e) =>
-              (e.currentTarget.style.transform = "rotate(0deg)")
-            }
           >
-            <i className="bi bi-arrow-left-right"></i>
+            <i className="bi bi-arrow-left-right fs-4"></i>
           </button>
         </div>
 
-        {/* Bottom Row: To Chain + Amount */}
-        <div className="row mb-3">
-          <div className="col-md-5 mb-3 mb-md-0">
-            <label className="form-label">Receive Amount</label>
-            <input
-              type="number"
-              className="form-control"
-              placeholder="Expected amount"
-            />
-          </div>
-
-          <div className="col-md-7">
-            <label className="form-label">To Chain</label>
+        <div className="mb-4">
+          <label className="form-label">To</label>
+          <div className="input-group mb-3">
             <select
-              className="form-select"
+              className="form-select custom-select"
               value={toChain}
               onChange={(e) => setToChain(e.target.value)}
             >
@@ -109,11 +73,21 @@ const Home = () => {
                 </option>
               ))}
             </select>
+            <select className="form-select custom-select" defaultValue="WETH">
+              <option>WETH</option>
+              <option>ETH</option>
+            </select>
+          </div>
+
+          <div className="text-center">
+            Destination Address: <span className="text-info">{toAddress}</span>
           </div>
         </div>
 
         <div className="d-grid">
-          <button className="btn btn-primary">Bridge</button>
+          <button className="btn btn-gradient text-white fw-semibold py-2 rounded-pill">
+            Bridge
+          </button>
         </div>
       </div>
     </div>
