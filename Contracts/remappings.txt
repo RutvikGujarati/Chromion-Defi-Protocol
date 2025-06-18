@@ -1,0 +1,2 @@
+@chainlink/=lib/chainlink-brownie-contracts/contracts/src/v0.8/ccip
+@chainlink-shared/=lib/chainlink-brownie-contracts/contracts/src/v0.8
