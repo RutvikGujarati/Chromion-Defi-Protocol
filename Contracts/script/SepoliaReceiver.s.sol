@@ -12,7 +12,7 @@ contract DeploySepoliaReceiver is Script {
 
         // Configuration for Sepolia testnet
         address router = 0x0BF3dE8c5D3e8A2B34D2BEeB17ABfCeBaf363A59; // Chainlink CCIP Router on Sepolia
-        address bridged = 0xba9709cc6C98bB34baa24BF62c28c18CE7bb26f2; // Replace with BridgedAVAX contract address
+        address bridged = 0x10dfe187478df8CC056d65B359A4a9eb0c3A991F; // Replace with BridgedAVAX contract address
 
         // Deploy the SepoliaReceiver contract
         SepoliaReceiver sepoliaReceiver = new SepoliaReceiver(

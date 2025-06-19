@@ -11,7 +11,7 @@ contract SepoliaReceiver is CCIPReceiver, Ownable {
     BridgedAVAX public immutable bridged;
     address public fujiBridge;
 
-    uint64 public constant FUJI_CHAIN_SELECTOR = 14767456258918635008;
+    uint64 public constant FUJI_CHAIN_SELECTOR = 14767482510784806043;
 
     event FujiBridgeSet(address indexed fujiBridge);
 
