@@ -3,27 +3,42 @@ pragma solidity ^0.8.19;
 
 import "@chainlink/applications/CCIPReceiver.sol";
 import "@chainlink/libraries/Client.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "./BridgedAVAX.sol";
 
-contract SepoliaReceiver is CCIPReceiver {
+contract SepoliaReceiver is CCIPReceiver, Ownable {
     address public immutable router;
     BridgedAVAX public immutable bridged;
+    address public fujiBridge;
 
-    constructor(address _router, address _bridged) CCIPReceiver(_router) {
+    uint64 public constant FUJI_CHAIN_SELECTOR = 14767456258918635008;
+
+    event FujiBridgeSet(address indexed fujiBridge);
+
+    constructor(
+        address _router,
+        address _bridged
+    ) CCIPReceiver(_router) Ownable(msg.sender) {
         router = _router;
         bridged = BridgedAVAX(_bridged);
     }
 
+    function setFujiBridge(address _fujiBridge) external onlyOwner {
+        require(_fujiBridge != address(0), "Invalid address");
+        fujiBridge = _fujiBridge;
+        emit FujiBridgeSet(_fujiBridge);
+    }
+
     function _ccipReceive(
-        Client.Any2EVMMessage memory message // Use memory since _ccipReceive expects memory
+        Client.Any2EVMMessage memory message
     ) internal override {
         require(
-            message.sourceChainSelector == 16015286601757825753,
+            message.sourceChainSelector == FUJI_CHAIN_SELECTOR,
             "Invalid Source Chain"
         );
-        address sender = abi.decode(message.sender, (address)); // Decode bytes to address
-        require(sender == address(this), "Invalid Sender");
-        require(msg.sender == address(router), "Unauthorized sender");
+        require(fujiBridge != address(0), "FujiBridge not set");
+        address sender = abi.decode(message.sender, (address));
+        require(sender == fujiBridge, "Invalid Sender");
 
         (address recipient, uint256 amount) = abi.decode(
             message.data,

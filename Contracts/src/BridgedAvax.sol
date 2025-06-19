@@ -12,7 +12,7 @@ contract BridgedAVAX is ERC20, Ownable(msg.sender) {
         _;
     }
 
-    constructor() ERC20("Bridged AVAX", "bAVAX") {}
+    constructor(string memory _tokenName, string memory _symbol) ERC20(_tokenName, _symbol) {}
 
     function setMinter(address _minter) external onlyOwner {
         minter = _minter;
