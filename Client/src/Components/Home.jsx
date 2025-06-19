@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../Styles/Home.css"; // for custom styles
+import { useAccount } from "wagmi";
 
 const Home = () => {
   const [fromChain, setFromChain] = useState("Avalanche Fuji");
   const [toChain, setToChain] = useState("Ethereum Sepolia");
-  const [amount, setAmount] = useState("");
-  const [toAddress] = useState("0x14...918c"); // Display only
-
+  const [amount, setAmount] = useState("Probable Amount");
+  const { address, isConnected } = useAccount();
   const chains = ["Avalanche Fuji", "Ethereum Sepolia"];
 
   const handleSwap = () => {
@@ -17,7 +17,7 @@ const Home = () => {
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center min-vh-100 bg-dark text-light px-3">
+    <div className="d-flex mt-5 justify-content-center align-items-center min-vh-100 bg-dark text-light px-3">
       <div className="glass-card p-4 w-100" style={{ maxWidth: "600px" }}>
         <h4 className="text-center mb-4 fw-bold gradient-text">Bridge</h4>
 
@@ -31,15 +31,23 @@ const Home = () => {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
             />
-            <select className="form-select custom-select" defaultValue="ETH">
-              <option>ETH</option>
-              <option>WETH</option>
+            <select className="form-select custom-select">
+              <option>
+                {fromChain === "Avalanche Fuji" ? "AVAX" : "WAVAX"}
+              </option>
             </select>
           </div>
           <select
-            className="form-select custom-select "
+            className="form-select custom-select"
             value={fromChain}
-            onChange={(e) => setFromChain(e.target.value)}
+            onChange={(e) => {
+              const selectedChain = e.target.value;
+              setFromChain(selectedChain);
+              const otherChain = chains.find(
+                (chain) => chain !== selectedChain
+              );
+              setToChain(otherChain);
+            }}
           >
             {chains.map((chain) => (
               <option key={chain} value={chain}>
@@ -73,21 +81,36 @@ const Home = () => {
                 </option>
               ))}
             </select>
-            <select className="form-select custom-select" defaultValue="WETH">
-              <option>WETH</option>
-              <option>ETH</option>
+            <select className="form-select custom-select">
+              <option>{toChain === "Avalanche Fuji" ? "AVAX" : "WAVAX"}</option>
             </select>
           </div>
-
+          <div className="input-group mb-3">
+            <input
+              type="text"
+              className="form-control bg-transparent border-secondary text-light"
+              placeholder="Probable Amount"
+              value={`~ ${amount}`}
+              disabled
+              onChange={(e) => setAmount(e.target.value)}
+            />
+          </div>
           <div className="text-center">
-            Destination Address: <span className="text-info">{toAddress}</span>
+            Destination Address:{" "}
+            <span className="text-info">
+              {address ? `${address.slice(0, 6)}...${address.slice(-6)}` : ""}
+            </span>
           </div>
         </div>
 
         <div className="d-grid">
-          <button className="btn btn-gradient text-white fw-semibold py-2 rounded-pill">
-            Bridge
-          </button>
+          {!isConnected ? (
+            <div className="text-center">Connect your wallet</div>
+          ) : (
+            <button className="btn btn-gradient text-white fw-semibold py-2 rounded-pill">
+              Bridge
+            </button>
+          )}
         </div>
       </div>
     </div>

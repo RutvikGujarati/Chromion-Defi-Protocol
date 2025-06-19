@@ -42,7 +42,7 @@
   background-color: #00d4ff;
 }
 
-.wallet-button {
+.wallet-button button{
   background: linear-gradient(45deg, #ff00ff, #00d4ff);
   color: #ffffff;
   border: none;
@@ -53,7 +53,7 @@
   white-space: nowrap;
 }
 
-.wallet-button:hover {
+.wallet-button button:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
 }
