@@ -49,7 +49,7 @@ contract RunCCIPReceive is Script {
         // Set fujiBridge in test contract
         testReceiver.setFujiBridge(fujiBridge);
 
-     	BridgedAVAX bridgedContract = BridgedAVAX(bridged);
+        BridgedAVAX bridgedContract = BridgedAVAX(bridged);
         bridgedContract.setMinter(address(testReceiver));
         // Call _ccipReceive
         testReceiver.callCCIPReceive(message);

@@ -140,7 +140,7 @@ const Home = () => {
             <div className="modal-dialog modal-dialog-centered" role="document">
               <div className="modal-content bg-dark text-light">
                 <div className="modal-header">
-                  <h5 className="modal-title">Spark Sent Successfully!</h5>
+                  <h5 className="modal-title">WAVAX Sent Successfully!</h5>
                   <button
                     type="button"
                     className="btn-close btn-close-white"

@@ -17,4 +17,4 @@ contract DeployBridgedAVAX is Script {
         vm.stopBroadcast();
     }
 }
-//sepolia - 0xba9709cc6C98bB34baa24BF62c28c18CE7bb26f2
+//sepolia - 0xF69a804897F2D7acad303bBfa1dD7535DfaE86f6

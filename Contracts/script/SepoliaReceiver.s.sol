@@ -11,13 +11,18 @@ contract DeploySepoliaReceiver is Script {
         vm.startBroadcast();
 
         // Configuration for Sepolia testnet
+        uint64 subscriptionId = 5062;
         address router = 0x0BF3dE8c5D3e8A2B34D2BEeB17ABfCeBaf363A59; // Chainlink CCIP Router on Sepolia
-        address bridged = 0x10dfe187478df8CC056d65B359A4a9eb0c3A991F; // Replace with BridgedAVAX contract address
+        address linkToken = 0x779877A7B0D9E8603169DdbD7836e478b4624789; // LINK token on sepolia
+
+        address bridged = 0xF69a804897F2D7acad303bBfa1dD7535DfaE86f6; // Replace with BridgedAVAX contract address
 
         // Deploy the SepoliaReceiver contract
         SepoliaReceiver sepoliaReceiver = new SepoliaReceiver(
+            subscriptionId,
             router,
-            bridged
+            bridged,
+			linkToken
         );
         console.log("SepoliaReceiver deployed to:", address(sepoliaReceiver));
 
@@ -26,4 +31,4 @@ contract DeploySepoliaReceiver is Script {
     }
 }
 
-//--- 0x9220e961229b24a91ee54AD1eB4AdA3e1846444c
+//--- 0xAB00f25b9804780df0A878504669a6855f7641ad

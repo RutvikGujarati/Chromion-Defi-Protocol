@@ -1,1 +1,1 @@
-export const FujiBridgeContract = "0x7DE15e71fE2B62C99F9c31E833CaB8ef87Fe216f"
+export const FujiBridgeContract = "0x548cbe9B84Dc056015B6212F7Ecd8BD64290CC4C"

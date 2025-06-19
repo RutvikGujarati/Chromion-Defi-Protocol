@@ -23,7 +23,7 @@ const Header = () => {
                 `nav-link ${isActive ? "active" : ""}`
               }
             >
-              Home
+              Bridge
             </NavLink>
             <NavLink
               to="/about"
@@ -48,7 +48,7 @@ const Header = () => {
                 `nav-link ${isActive ? "active" : ""}`
               }
             >
-              Home
+              Bridge
             </NavLink>
             <NavLink
               to="/about"

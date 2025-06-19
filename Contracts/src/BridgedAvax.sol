@@ -22,7 +22,7 @@ contract BridgedAVAX is ERC20, Ownable(msg.sender) {
         _mint(to, amount);
     }
 
-    function burn(uint256 amount) external {
-        _burn(msg.sender, amount);
+    function burn(address user,uint256 amount) external onlyMinter {
+        _burn(user, amount);
     }
 }

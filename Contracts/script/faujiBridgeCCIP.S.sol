@@ -18,10 +18,10 @@ contract DeployFujiBridgeCCIP is Script {
 
         // Deploy the FujiBridgeCCIP contract
         FujiBridgeCCIP fujiBridge = new FujiBridgeCCIP(
-            subscriptionId,
-            router,
+            sepoliaReceiver,
             linkToken,
-            sepoliaReceiver
+            router,
+            subscriptionId
         );
         console.log("FujiBridgeCCIP deployed to:", address(fujiBridge));
 
@@ -29,4 +29,4 @@ contract DeployFujiBridgeCCIP is Script {
         vm.stopBroadcast();
     }
 }
-// --- 0x9E049662Cb15dd9e4668422f26e67Eb0eeD9a845
+// --- 0x548cbe9B84Dc056015B6212F7Ecd8BD64290CC4C
