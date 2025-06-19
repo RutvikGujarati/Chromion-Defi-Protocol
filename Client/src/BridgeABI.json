@@ -1,0 +1,162 @@
+[
+	{
+		"type": "constructor",
+		"inputs": [
+			{
+				"name": "_subscriptionId",
+				"type": "uint64",
+				"internalType": "uint64"
+			},
+			{
+				"name": "_router",
+				"type": "address",
+				"internalType": "address"
+			},
+			{
+				"name": "_linkToken",
+				"type": "address",
+				"internalType": "address"
+			},
+			{
+				"name": "_sepoliaReceiver",
+				"type": "address",
+				"internalType": "address"
+			}
+		],
+		"stateMutability": "nonpayable"
+	},
+	{
+		"type": "function",
+		"name": "SEP_CHAIN",
+		"inputs": [],
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint64",
+				"internalType": "uint64"
+			}
+		],
+		"stateMutability": "view"
+	},
+	{
+		"type": "function",
+		"name": "linkToken",
+		"inputs": [],
+		"outputs": [
+			{
+				"name": "",
+				"type": "address",
+				"internalType": "contract LinkTokenInterface"
+			}
+		],
+		"stateMutability": "view"
+	},
+	{
+		"type": "function",
+		"name": "router",
+		"inputs": [],
+		"outputs": [
+			{
+				"name": "",
+				"type": "address",
+				"internalType": "contract IRouterClient"
+			}
+		],
+		"stateMutability": "view"
+	},
+	{
+		"type": "function",
+		"name": "sendSpark",
+		"inputs": [
+			{
+				"name": "recipient",
+				"type": "address",
+				"internalType": "address"
+			},
+			{
+				"name": "amount",
+				"type": "uint256",
+				"internalType": "uint256"
+			}
+		],
+		"outputs": [],
+		"stateMutability": "payable"
+	},
+	{
+		"type": "function",
+		"name": "sepoliaReceiver",
+		"inputs": [],
+		"outputs": [
+			{
+				"name": "",
+				"type": "address",
+				"internalType": "address"
+			}
+		],
+		"stateMutability": "view"
+	},
+	{
+		"type": "function",
+		"name": "setSepoliaReciever",
+		"inputs": [
+			{
+				"name": "_sepoliaReceiver",
+				"type": "address",
+				"internalType": "address"
+			}
+		],
+		"outputs": [],
+		"stateMutability": "nonpayable"
+	},
+	{
+		"type": "function",
+		"name": "subscriptionId",
+		"inputs": [],
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint64",
+				"internalType": "uint64"
+			}
+		],
+		"stateMutability": "view"
+	},
+	{
+		"type": "event",
+		"name": "FeeEstimated",
+		"inputs": [
+			{
+				"name": "fee",
+				"type": "uint256",
+				"indexed": false,
+				"internalType": "uint256"
+			}
+		],
+		"anonymous": false
+	},
+	{
+		"type": "event",
+		"name": "SparkSent",
+		"inputs": [
+			{
+				"name": "messageId",
+				"type": "bytes32",
+				"indexed": true,
+				"internalType": "bytes32"
+			},
+			{
+				"name": "from",
+				"type": "address",
+				"indexed": true,
+				"internalType": "address"
+			},
+			{
+				"name": "amount",
+				"type": "uint256",
+				"indexed": false,
+				"internalType": "uint256"
+			}
+		],
+		"anonymous": false
+	}
+]

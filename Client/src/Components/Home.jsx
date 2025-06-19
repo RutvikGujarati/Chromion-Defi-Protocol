@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../Styles/Home.css"; // for custom styles
 import { useAccount } from "wagmi";
+import { useBridge } from "../Context/BridgeContext";
 
 const Home = () => {
   const [fromChain, setFromChain] = useState("Avalanche Fuji");
@@ -10,10 +11,21 @@ const Home = () => {
   const [amount, setAmount] = useState("Probable Amount");
   const { address, isConnected } = useAccount();
   const chains = ["Avalanche Fuji", "Ethereum Sepolia"];
+  const { sendSpark, isLoading, showSuccess, setShowSuccess, successData } =
+    useBridge();
 
   const handleSwap = () => {
     setFromChain(toChain);
     setToChain(fromChain);
+  };
+
+  const handleBridge = () => {
+    if (!address || !amount || isNaN(amount)) {
+      alert("Invalid address or amount");
+      return;
+    }
+
+    sendSpark(address, amount); // sends tokens to self; you can modify recipient
   };
 
   return (
@@ -106,12 +118,54 @@ const Home = () => {
         <div className="d-grid">
           {!isConnected ? (
             <div className="text-center">Connect your wallet</div>
+          ) : isLoading ? (
+            <button
+              className="btn btn-gradient text-white fw-semibold py-2 rounded-pill"
+              disabled
+            >
+              Bridging...{" "}
+              <span className="spinner-border spinner-border-sm ms-2"></span>
+            </button>
           ) : (
-            <button className="btn btn-gradient text-white fw-semibold py-2 rounded-pill">
+            <button
+              className="btn btn-gradient text-white fw-semibold py-2 rounded-pill"
+              onClick={handleBridge}
+            >
               Bridge
             </button>
           )}
         </div>
+        {showSuccess && successData && (
+          <div className="modal fade show d-block" tabIndex="-1" role="dialog">
+            <div className="modal-dialog modal-dialog-centered" role="document">
+              <div className="modal-content bg-dark text-light">
+                <div className="modal-header">
+                  <h5 className="modal-title">Spark Sent Successfully!</h5>
+                  <button
+                    type="button"
+                    className="btn-close btn-close-white"
+                    onClick={() => setShowSuccess(false)}
+                  ></button>
+                </div>
+                <div className="modal-body">
+                  <p>
+                    <strong>Message ID:</strong>
+                    <br />
+                    {successData.messageId}
+                  </p>
+                  <p>
+                    <strong>From:</strong>
+                    <br />
+                    {successData.from}
+                  </p>
+                  <p>
+                    <strong>Amount:</strong> {successData.amount} AVAX
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
