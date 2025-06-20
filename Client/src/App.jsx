@@ -14,9 +14,10 @@ import { BridgeProvider } from "./Context/BridgeContext";
 const queryClient = new QueryClient();
 
 const { connectors } = getDefaultWallets({
-  appName: "NovaDapp",
+  appName: "Bridge-Protocol",
   projectId: "10c8edc95d61fa42b48ed61a93d22425", // Replace with your WalletConnect project ID
   chains: [sepolia, avalancheFuji],
+  ssr: true,
 });
 
 const wagmiConfig = createConfig({
@@ -38,6 +39,9 @@ function App() {
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider
+          coolMode
+          initialChain={avalancheFuji}
+          showRecentTransactions={true}
           theme={darkTheme({
             accentColor: "#f8f9fa",
             accentColorForeground: "#212529",

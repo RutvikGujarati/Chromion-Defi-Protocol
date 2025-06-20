@@ -1,1 +1,3 @@
 export const FujiBridgeContract = "0x548cbe9B84Dc056015B6212F7Ecd8BD64290CC4C"
+export const SepoliaReceiverContract = "0xAB00f25b9804780df0A878504669a6855f7641ad"
+export const WAVAX_SEPOLIA_ADDRESS = "0xF69a804897F2D7acad303bBfa1dD7535DfaE86f6"

@@ -37,7 +37,7 @@ const Header = () => {
 
           {/* Right - Wallet */}
           <div className="wallet-button">
-            <ConnectButton />
+            <ConnectButton showBalance={true} />
           </div>
 
           {/* Mobile Nav Links */}
