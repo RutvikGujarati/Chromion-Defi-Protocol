@@ -18,6 +18,9 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.2",
+    "react-tsparticles": "^2.12.2",
+    "tsparticles": "^3.8.1",
+    "tsparticles-preset-links": "^2.12.0",
     "viem": "^2.31.3",
     "wagmi": "^2.15.6"
   },

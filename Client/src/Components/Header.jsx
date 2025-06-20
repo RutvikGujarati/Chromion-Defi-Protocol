@@ -5,59 +5,57 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 const Header = () => {
   return (
-    <header className="header fixed-top">
-      <div className="container-fluid px-3">
+    <header className="header fixed-top shadow-sm">
+      <div className="container-fluid px-4">
         <div className="d-flex flex-wrap align-items-center justify-content-between py-3">
-          {/* Left side - Logo */}
           <div className="flex-shrink-0">
             <NavLink to="/" className="logo-link text-decoration-none">
               <span className="logo-text">NovaDapp</span>
             </NavLink>
           </div>
 
-          {/* Center - Nav Links */}
-          <nav className="d-none d-md-flex gap-4">
-            <NavLink
-              to="/"
-              className={({ isActive }) =>
-                `nav-link ${isActive ? "active" : ""}`
-              }
-            >
-              Bridge
-            </NavLink>
-            <NavLink
-              to="/about"
-              className={({ isActive }) =>
-                `nav-link ${isActive ? "active" : ""}`
-              }
-            >
-              About
-            </NavLink>
-          </nav>
+          <div className="d-flex flex-column flex-md-row align-items-center gap-3 ms-auto">
+            <nav className="d-none d-md-flex gap-4">
+              <NavLink
+                to="/"
+                className={({ isActive }) =>
+                  `nav-link ${isActive ? "active" : ""}`
+                }
+              >
+                Bridge
+              </NavLink>
+              <NavLink
+                to="/about"
+                className={({ isActive }) =>
+                  `nav-link ${isActive ? "active" : ""}`
+                }
+              >
+                About
+              </NavLink>
+            </nav>
 
-          {/* Right - Wallet */}
-          <div className="wallet-button">
-            <ConnectButton showBalance={true} />
-          </div>
+            <div className="wallet-button">
+              <ConnectButton showBalance={false} />
+            </div>
 
-          {/* Mobile Nav Links */}
-          <div className="w-100 d-md-none mt-3 d-flex justify-content-center gap-4">
-            <NavLink
-              to="/"
-              className={({ isActive }) =>
-                `nav-link ${isActive ? "active" : ""}`
-              }
-            >
-              Bridge
-            </NavLink>
-            <NavLink
-              to="/about"
-              className={({ isActive }) =>
-                `nav-link ${isActive ? "active" : ""}`
-              }
-            >
-              About
-            </NavLink>
+            <div className="d-md-none w-100 d-flex justify-content-center gap-4 border-top pt-3">
+              <NavLink
+                to="/"
+                className={({ isActive }) =>
+                  `nav-link ${isActive ? "active" : ""}`
+                }
+              >
+                Bridge
+              </NavLink>
+              <NavLink
+                to="/about"
+                className={({ isActive }) =>
+                  `nav-link ${isActive ? "active" : ""}`
+                }
+              >
+                About
+              </NavLink>
+            </div>
           </div>
         </div>
       </div>

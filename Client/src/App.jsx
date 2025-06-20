@@ -10,6 +10,7 @@ import "./App.css";
 import Header from "./Components/Header";
 import Home from "./Components/Home";
 import { BridgeProvider } from "./Context/BridgeContext";
+import About from "./Components/About";
 
 const queryClient = new QueryClient();
 
@@ -24,15 +25,6 @@ const wagmiConfig = createConfig({
   chains: [sepolia, avalancheFuji],
   connectors,
 });
-
-function About() {
-  return (
-    <div className="main-content container mt-5 pt-5">
-      <h1>About NovaDapp</h1>
-      <p>This is the About page for our decentralized application.</p>
-    </div>
-  );
-}
 
 function App() {
   return (

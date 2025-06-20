@@ -1,74 +1,97 @@
 .header {
-  background: linear-gradient(90deg, #1a1a2e 0%, #16213e 100%);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  z-index: 1030;
-}
-
-.logo-text {
-  font-size: 1.8rem;
-  font-weight: 700;
-  background: linear-gradient(45deg, #00d4ff, #ff00ff);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  transition: transform 0.3s ease;
-}
-
-.logo-text:hover {
-  transform: scale(1.05);
-}
-
-.nav-link {
-  color: #ffffff !important;
-  font-size: 1.1rem;
-  font-weight: 500;
-  position: relative;
-  transition: color 0.3s ease;
-  text-decoration: none;
-}
-
-.nav-link:hover,
-.nav-link.active {
-  color: #00d4ff !important;
-}
-
-.nav-link.active::after {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 2px;
-  bottom: -2px;
-  left: 0;
-  background-color: #00d4ff;
-}
-
-.wallet-button button{
-  background: linear-gradient(45deg, #ff00ff, #00d4ff);
-  color: #ffffff;
-  border: none;
-  padding: 0.4rem 1.2rem;
-  border-radius: 25px;
-  font-weight: 600;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  white-space: nowrap;
-}
-
-.wallet-button button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
-}
-
-@media (max-width: 576px) {
+	background: rgba(18, 18, 38, 0.9);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	z-index: 1030;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+	transition: background 0.3s ease;
+  }
+  
   .logo-text {
-    font-size: 1.4rem;
+	font-size: 2rem;
+	font-weight: 700;
+	background: linear-gradient(90deg, #00d4ff, #ff00ff, #00d4ff);
+	background-size: 200% auto;
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	animation: gradient-shift 4s linear infinite;
+	transition: transform 0.3s ease;
   }
 
-  .wallet-button {
-    padding: 0.35rem 1rem;
-    font-size: 0.9rem;
+  
+  @keyframes gradient-shift {
+	0% {
+	  background-position: 0% center;
+	}
+	100% {
+	  background-position: 200% center;
+	}
   }
-
+  
+  .logo-text:hover {
+	transform: scale(1.08);
+  }
+  
   .nav-link {
-    font-size: 1rem;
+	color: #ffffff !important;
+	font-size: 1.1rem;
+	font-weight: 500;
+	position: relative;
+	padding: 0.25rem 0.5rem;
+	text-decoration: none;
+	transition: color 0.3s ease;
   }
-}
+  
+  .nav-link::after {
+	content: "";
+	position: absolute;
+	width: 0%;
+	height: 2px;
+	bottom: -2px;
+	left: 0;
+	background-color: #00d4ff;
+	transition: width 0.3s ease;
+  }
+  
+  .nav-link:hover::after,
+  .nav-link.active::after {
+	width: 100%;
+  }
+  
+  .nav-link:hover,
+  .nav-link.active {
+	color: #00d4ff !important;
+  }
+  
+  .wallet-button button {
+	background: linear-gradient(45deg, #ff00ff, #00d4ff);
+	color: #ffffff;
+	border: none;
+	padding: 0.4rem 1.2rem;
+	border-radius: 25px;
+	font-weight: 600;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+	white-space: nowrap;
+	font-size: 0.95rem;
+  }
+  
+  .wallet-button button:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
+  }
+  
+  @media (max-width: 576px) {
+	.logo-text {
+	  font-size: 1.5rem;
+	}
+  
+	.wallet-button {
+	  padding: 0.35rem 1rem;
+	  font-size: 0.9rem;
+	}
+  
+	.nav-link {
+	  font-size: 1rem;
+	}
+  }

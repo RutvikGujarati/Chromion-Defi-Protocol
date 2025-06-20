@@ -8,6 +8,7 @@ import { useBridge } from "../Context/BridgeContext";
 import { ethers } from "ethers";
 import { WAVAX_SEPOLIA_ADDRESS } from "../ContractAddress";
 import metamask from "../assets/metamask-icon.png";
+import ParticlesBg from "../Animation/ParticlesBg";
 
 const Home = () => {
   const [fromChain, setFromChain] = useState("Avalanche Fuji");
@@ -156,7 +157,9 @@ const Home = () => {
   };
 
   return (
-    <div className="d-flex mt-5 justify-content-center align-items-center min-vh-100 bg-dark text-light px-3">
+	<div className="position-relative overflow-hidden">
+      <ParticlesBg /> {/* 👈 Particle background */}
+    <div className="home-wrapper d-flex mt-5 justify-content-center align-items-center min-vh-100  text-light px-3">
       <div className="glass-card p-4 w-100" style={{ maxWidth: "600px" }}>
         <h4 className="text-center mb-4 fw-bold gradient-text">Bridge</h4>
 
@@ -353,6 +356,7 @@ const Home = () => {
           </div>
         )}
       </div>
+	  </div>
     </div>
   );
 };
