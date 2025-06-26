@@ -11,6 +11,8 @@ import Header from "./Components/Header";
 import Home from "./Components/Home";
 import { BridgeProvider } from "./Context/BridgeContext";
 import About from "./Components/About";
+import LendBorrow from "./Components/LendBorrow";
+import { Web3Provider } from "./Context/Protocol";
 
 const queryClient = new QueryClient();
 
@@ -43,12 +45,15 @@ function App() {
         >
           <>
             <Header />
-            <BridgeProvider>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/about" element={<About />} />
-              </Routes>
-            </BridgeProvider>
+            <Web3Provider>
+              <BridgeProvider>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/Protocol" element={<LendBorrow />} />
+                </Routes>
+              </BridgeProvider>
+            </Web3Provider>
           </>
         </RainbowKitProvider>
       </QueryClientProvider>

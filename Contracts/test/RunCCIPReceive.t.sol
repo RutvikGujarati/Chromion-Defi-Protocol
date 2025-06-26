@@ -10,9 +10,11 @@ import {BridgedAVAX} from "../src/BridgedAVAX.sol";
 // Test contract to expose _ccipReceive
 contract TestSepoliaReceiver is SepoliaReceiver {
     constructor(
+        uint64 _subscriptionId,
         address _router,
-        address _bridged
-    ) SepoliaReceiver(_router, _bridged) {}
+        address _bridged,
+        address _linkToken
+    ) SepoliaReceiver(_subscriptionId,_router, _bridged,_linkToken) {}
 
     function callCCIPReceive(Client.Any2EVMMessage memory message) external {
         _ccipReceive(message);
@@ -26,6 +28,8 @@ contract RunCCIPReceive is Script {
         // Configuration
         address router = 0xD0daae2231E9CB96b94C8512223533293C3693Bf; // Sepolia CCIP Router
         address bridged = 0xba9709cc6C98bB34baa24BF62c28c18CE7bb26f2; // Replace with BridgedAVAX address
+		uint64 subscriptionId = 5062;
+		address linkToken = 0x779877A7B0D9E8603169DdbD7836e478b4624789; // LINK token on sepolia
         address fujiBridge = 0x9E049662Cb15dd9e4668422f26e67Eb0eeD9a845; // Replace with FujiBridgeCCIP address
         address recipient = 0x14093F94E3D9E59D1519A9ca6aA207f88005918c; // From SparkSent event
         uint256 amount = 100000000000000000; // 0.1 AVAX from SparkSent event
@@ -42,8 +46,10 @@ contract RunCCIPReceive is Script {
 
         // Deploy test contract
         TestSepoliaReceiver testReceiver = new TestSepoliaReceiver(
+			subscriptionId,
             router,
-            bridged
+            bridged,
+			linkToken
         );
 
         // Set fujiBridge in test contract

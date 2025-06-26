@@ -86,3 +86,36 @@ input[type="number"] {
   position: relative;
   z-index: 1;
 }
+/* Clean glass-like table without hard borders */
+.table-glass {
+  background-color: transparent;
+  color: #fff;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.table-glass thead tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.table-glass th {
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  background-color: transparent;
+  color: #ddd;
+}
+
+.table-glass td {
+  padding: 0.75rem 1rem;
+  background-color: transparent;
+  color: #eee;
+}
+
+.table-glass tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.table-glass tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+}

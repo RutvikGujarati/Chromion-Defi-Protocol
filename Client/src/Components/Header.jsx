@@ -24,13 +24,22 @@ const Header = () => {
               >
                 Bridge
               </NavLink>
+
+              <NavLink
+                to="/Protocol"
+                className={({ isActive }) =>
+                  `nav-link ${isActive ? "active" : ""}`
+                }
+              >
+                Protocol
+              </NavLink>
               <NavLink
                 to="/about"
                 className={({ isActive }) =>
                   `nav-link ${isActive ? "active" : ""}`
                 }
               >
-                About
+                Info
               </NavLink>
             </nav>
 
@@ -53,7 +62,7 @@ const Header = () => {
                   `nav-link ${isActive ? "active" : ""}`
                 }
               >
-                About
+                Info
               </NavLink>
             </div>
           </div>
