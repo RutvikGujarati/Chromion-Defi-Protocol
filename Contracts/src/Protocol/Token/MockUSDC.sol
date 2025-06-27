@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT 
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
@@ -8,7 +8,7 @@ contract MockUSDC is ERC20, Ownable {
     uint256 public constant MINT_BURN_LIMIT = 1000 * 10 ** 6; // 1000 mUSDC (6 decimals)
     uint256 public constant MINT_BURN_COOLDOWN = 1 days; // 24 hours cooldown
     mapping(address => uint256) public lastMintTime; // Last mint timestamp per address
-    mapping(address => uint256) public lastBurnTime; // Last mint timestamp per address
+    mapping(address => uint256) public lastBurnTime; // Last burn timestamp per address
 
     constructor(
         string memory _name,
@@ -19,35 +19,35 @@ contract MockUSDC is ERC20, Ownable {
         return 6;
     }
 
-    // Public mint function with daily limit and cooldown
-    function mint() external {
-        require(
-            lastMintTime[msg.sender] + MINT_BURN_COOLDOWN <= block.timestamp,
-            "Can only mint once per day"
-        );
-        require(
-            balanceOf(msg.sender) == 0 || lastMintTime[msg.sender] > 0,
-            "Already minted today"
-        );
-
-        _mint(msg.sender, MINT_BURN_LIMIT);
-        lastMintTime[msg.sender] = block.timestamp;
+    // Modified mint function to match IMintableERC20 interface
+    function mint(address to, uint256 amount) external {
+        require(to != address(0), "Invalid recipient");
+        // Optionally, keep restrictions for direct user minting
+        if (msg.sender != owner()) {
+            require(
+                lastMintTime[to] + MINT_BURN_COOLDOWN <= block.timestamp,
+                "Can only mint once per day"
+            );
+            require(amount <= MINT_BURN_LIMIT, "Exceeds mint limit");
+            lastMintTime[to] = block.timestamp;
+        }
+        _mint(to, amount);
     }
 
-    // Burn function (optional, restricted to owner for now)
+    // Burn function compatible with IMintableERC20
     function burn(uint256 amount) external {
         require(amount > 0, "Invalid amount");
         require(balanceOf(msg.sender) >= amount, "Insufficient balance");
-        require(
-            lastBurnTime[msg.sender] + MINT_BURN_COOLDOWN <= block.timestamp,
-            "Can only burn once per day"
-        );
-        require(
-            balanceOf(msg.sender) == 0 || lastBurnTime[msg.sender] > 0,
-            "Already burned today"
-        );
+        // Optionally, keep restrictions for direct user burning
+        if (msg.sender != owner()) {
+            require(
+                lastBurnTime[msg.sender] + MINT_BURN_COOLDOWN <=
+                    block.timestamp,
+                "Can only burn once per day"
+            );
+            lastBurnTime[msg.sender] = block.timestamp;
+        }
         _burn(msg.sender, amount);
-        lastBurnTime[msg.sender] = block.timestamp;
     }
 
     // Standard ERC20 transfer function

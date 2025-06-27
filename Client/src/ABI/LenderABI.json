@@ -145,19 +145,6 @@
 	},
 	{
 		"type": "function",
-		"name": "emergencyWithdraw",
-		"inputs": [
-			{
-				"name": "_token",
-				"type": "address",
-				"internalType": "address"
-			}
-		],
-		"outputs": [],
-		"stateMutability": "nonpayable"
-	},
-	{
-		"type": "function",
 		"name": "linkToken",
 		"inputs": [],
 		"outputs": [
@@ -276,6 +263,24 @@
 				"name": "_newProtocol",
 				"type": "address",
 				"internalType": "address"
+			}
+		],
+		"outputs": [],
+		"stateMutability": "nonpayable"
+	},
+	{
+		"type": "function",
+		"name": "withdraw",
+		"inputs": [
+			{
+				"name": "_token",
+				"type": "address",
+				"internalType": "address"
+			},
+			{
+				"name": "_amount",
+				"type": "uint256",
+				"internalType": "uint256"
 			}
 		],
 		"outputs": [],

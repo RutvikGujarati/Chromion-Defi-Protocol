@@ -9,10 +9,10 @@ import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {Pausable} from "@openzeppelin/contracts/utils/Pausable.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import {AggregatorV3Interface} from "@chainlink-shared/shared/interfaces/AggregatorV3Interface.sol";
+import "@chainlink/applications/CCIPReceiver.sol";
 
 // Sender contract on Avalanche Fuji
-contract CrossChainLender is ReentrancyGuard, Ownable, Pausable {
+contract CrossChainLender is CCIPReceiver, ReentrancyGuard, Ownable, Pausable {
     using SafeERC20 for IERC20;
 
     IRouterClient public immutable router;
@@ -26,9 +26,11 @@ contract CrossChainLender is ReentrancyGuard, Ownable, Pausable {
     }
     enum ActionType {
         Deposit,
-        Withdraw
+        Withdraw,
+        DebtUpdate
     }
     mapping(address => TokenConfig) public allowedTokens; // Allowed deposit tokens
+    mapping(address => bool) public hasDebt; // Tracks if user has outstanding debt
     mapping(address => mapping(address => uint256)) public deposits; // user => token => amount
     uint256 public constant MIN_DEPOSIT = 1e6; // Minimum deposit (6 decimals base)
     uint256 public constant MAX_DEPOSIT = 1e12 * 1e6; // Maximum deposit
@@ -53,12 +55,13 @@ contract CrossChainLender is ReentrancyGuard, Ownable, Pausable {
     event TokenAdded(address indexed token, uint8 decimals);
     event TokenRemoved(address indexed token);
     event LinkWithdrawn(address indexed to, uint256 amount);
+    event DebtStatusUpdated(address indexed user, bool hasDebt);
 
     constructor(
         address _router,
         address _linkToken,
         address _protocolContract
-    ) Ownable(msg.sender) {
+    ) CCIPReceiver(_router) Ownable(msg.sender) {
         require(_router != address(0), "Invalid router address");
         require(_linkToken != address(0), "Invalid LINK token address");
         require(_protocolContract != address(0), "Invalid protocol address");
@@ -86,7 +89,28 @@ contract CrossChainLender is ReentrancyGuard, Ownable, Pausable {
         delete allowedTokens[_token];
         emit TokenRemoved(_token);
     }
+    function _ccipReceive(
+        Client.Any2EVMMessage memory message
+    ) internal override nonReentrant whenNotPaused {
+        require(msg.sender == address(router), "Not from router");
+        require(
+            message.sourceChainSelector == destinationChainSelector,
+            "Invalid Source Chain"
+        );
+        require(
+            abi.decode(message.sender, (address)) == protocolContract,
+            "Not from protocol contract"
+        );
 
+        (uint8 action, address user, bool hasDebtStatus) = abi.decode(
+            message.data,
+            (uint8, address, bool)
+        );
+        require(action == uint8(ActionType.DebtUpdate), "Invalid action type");
+
+        hasDebt[msg.sender] = hasDebtStatus;
+        emit DebtStatusUpdated(user, hasDebtStatus);
+    }
     // Deposit tokens as collateral
     function deposit(
         address _token,
@@ -142,6 +166,8 @@ contract CrossChainLender is ReentrancyGuard, Ownable, Pausable {
         TokenConfig memory tokenConfig = allowedTokens[_token];
         require(tokenConfig.isAllowed, "Token not allowed");
         require(_amount > 0, "Amount must be greater than zero");
+        require(!hasDebt[msg.sender], "Outstanding debt: repay loans first");
+
         require(
             deposits[msg.sender][_token] >= _amount,
             "Insufficient balance"

@@ -3,7 +3,7 @@ pragma solidity ^0.8.19;
 
 import {Script} from "forge-std/Script.sol";
 import {console} from "forge-std/console.sol";
-import {FujiBridgeCCIP} from "../src/FujiBridgeCCIP.sol";
+import {FujiBridgeCCIP} from "../../src/Bridge/FujiBridgeCCIP.sol";
 
 contract DeployFujiBridgeCCIP is Script {
     function run() external {

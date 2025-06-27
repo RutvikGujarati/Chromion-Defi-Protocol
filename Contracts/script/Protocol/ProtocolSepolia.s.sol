@@ -12,14 +12,14 @@ contract DeployCrossChainProtocol is Script {
 
         // Configuration for sepolia testnet (Avalanche C-Chain testnet)
         address router = 0x0BF3dE8c5D3e8A2B34D2BEeB17ABfCeBaf363A59; // Chainlink CCIP Router on sepolia
-        // address linkToken = 0x779877A7B0D9E8603169DdbD7836e478b4624789; // LINK token on sepolia
+        address linkToken = 0x779877A7B0D9E8603169DdbD7836e478b4624789; // LINK token on sepolia
         // address MUSDC = 0x283aFB5Bf76369Cc9575439b8d149BeF7E4f355d; // Replace with USDC contract address
         // address USDCAggregator = 0xa2F78aB2355FE2F984D808b5CEe7FD0A93D4A637;
         // address AVAXAggregator = 0x5498BB86BC934c8D34FDA08E81D444153d0D06aD;
         // address ETHAggregator = 0x694AA1769357215DE4FAC081bf1f309aDC325306;
 
         // Deploy the CrossChainProtocol contract
-        CrossChainProtocol sepoliaCCIPReceiver = new CrossChainProtocol(router);
+        CrossChainProtocol sepoliaCCIPReceiver = new CrossChainProtocol(router,linkToken);
         console.log(
             "CrossChainProtocol deployed to:",
             address(sepoliaCCIPReceiver)
@@ -29,4 +29,4 @@ contract DeployCrossChainProtocol is Script {
         vm.stopBroadcast();
     }
 }
-// --- 0x4FD7A5EA79fdB14fF25088F5065CC59D40cE8992
+// --- 0x5CeF7D979b969A93da436A196540026cAD2B0816

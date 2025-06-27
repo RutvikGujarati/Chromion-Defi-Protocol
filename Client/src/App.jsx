@@ -11,8 +11,8 @@ import Header from "./Components/Header";
 import Home from "./Components/Home";
 import { BridgeProvider } from "./Context/BridgeContext";
 import About from "./Components/About";
-import LendBorrow from "./Components/LendBorrow";
 import { Web3Provider } from "./Context/Protocol";
+import LendBorrow from "./Components/Layouts/LendBorrow";
 
 const queryClient = new QueryClient();
 

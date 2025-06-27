@@ -2,7 +2,7 @@
 pragma solidity ^0.8.19;
 
 import "forge-std/Script.sol";
-import {BridgedAVAX} from "../src/BridgedAVAX.sol";
+import {BridgedAVAX} from "../../src/Bridge/BridgedAVAX.sol";
 
 contract DeployBridgedAVAX is Script {
     function run() external {

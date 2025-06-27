@@ -2,7 +2,7 @@
 pragma solidity ^0.8.19;
 
 import "forge-std/Script.sol";
-import {MockUSDC} from "../../src/Protocol/MockUSDC.sol";
+import {MockUSDC} from "../../src/Protocol/Token/MockUSDC.sol";
 
 contract DeployMockUSDC is Script {
     function run() external {
@@ -17,5 +17,5 @@ contract DeployMockUSDC is Script {
         vm.stopBroadcast();
     }
 }
-//fuji - 0x5bdAE9570DA9803fE03B10a5c18ca3449754C23f
-//sepoli - 0x770b9CcFe7a60FE269E055D5d6352DA6092Ad345
+//fuji - 0x2B87F21e0302bB4D42197BeD902d310C385C6972
+//sepoli - 0xfe74510FD401Fb37b47CE4761ED3977f0Da17e12

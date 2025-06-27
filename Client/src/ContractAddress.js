@@ -1,3 +1,12 @@
+//Bridge fuji <-> sepolia
 export const FujiBridgeContract = "0x548cbe9B84Dc056015B6212F7Ecd8BD64290CC4C"
 export const SepoliaReceiverContract = "0xAB00f25b9804780df0A878504669a6855f7641ad"
 export const WAVAX_SEPOLIA_ADDRESS = "0xF69a804897F2D7acad303bBfa1dD7535DfaE86f6"
+
+
+//lending and borrowing
+export const LENDER_CONTRACT_ADDRESS = "0x95a0BDbFEeE6179491d7318db3c1D40bc374d56a"; // Fuji
+export const PROTOCOL_CONTRACT_ADDRESS =
+	"0x5CeF7D979b969A93da436A196540026cAD2B0816"; // Sepolia
+export const USDC_TOKEN_ADDRESS = "0x2B87F21e0302bB4D42197BeD902d310C385C6972"; // Fuji
+export const MUSDC_TOKEN_ADDRESS = "0xfe74510FD401Fb37b47CE4761ED3977f0Da17e12"; // Sepolia
