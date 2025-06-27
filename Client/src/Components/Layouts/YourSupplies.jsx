@@ -107,7 +107,7 @@ const YourSupplies = ({ supplies, onWithdraw }) => {
                   onChange={(e) => setWithdrawAmount(e.target.value)}
                   max={selectedAsset?.balance}
                 />
-                <div className="mt-2 text-muted">
+                <div className="mt-2 ">
                   Max: {selectedAsset?.balance} {selectedAsset?.symbol}
                 </div>
               </div>

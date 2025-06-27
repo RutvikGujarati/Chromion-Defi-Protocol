@@ -8,7 +8,6 @@ library BorrowLogic {
     uint256 public constant LOAN_TO_VALUE_RATIO = 70; // 70% LTV
     uint256 public constant MIN_BORROW = 1e6; // 6 decimals base
     uint256 public constant MAX_BORROW = 1e12 * 1e6; // 6 decimals base
-    uint256 public constant BORROW_APY = 10e16; // 10% APY = 0.10 * 1e18
 
     struct BorrowStorage {
         mapping(address => mapping(address => uint256)) deposits; // user => sourceToken => amount
@@ -52,26 +51,13 @@ library BorrowLogic {
             totalBorrowed >= maxBorrowable ? 0 : maxBorrowable - totalBorrowed;
     }
 
-    function accruedInterest(
-        BorrowStorage storage self,
-        address user,
-        address token
-    ) internal view returns (uint256) {
-        uint256 principal = self.borrowings[user][token];
-        if (principal == 0 || self.borrowTimestamps[user][token] == 0) return 0;
-
-        uint256 timeElapsed = block.timestamp -
-            self.borrowTimestamps[user][token];
-        return (principal * BORROW_APY * timeElapsed) / (365 days * 1e18);
-    }
-
     function validateBorrow(
         BorrowStorage storage self,
         TokenManager.TokenStorage storage tokenStorage,
         address _destinationToken,
         uint256 _amount,
         address _user
-    ) internal view returns (uint256 current, uint256 interest) {
+    ) internal view returns (uint256 current) {
         require(
             tokenStorage.allowedTokens[_destinationToken].isBorrowable,
             "Token not borrowable"
@@ -79,7 +65,6 @@ library BorrowLogic {
         require(_amount >= MIN_BORROW, "Borrow below minimum");
         require(_amount <= MAX_BORROW, "Borrow exceeds maximum");
 
-        interest = accruedInterest(self, _user, _destinationToken);
         current = self.borrowings[_user][_destinationToken];
         uint256 maxBorrow = getMaxBorrow(
             self,
@@ -88,10 +73,7 @@ library BorrowLogic {
             _destinationToken
         );
 
-        require(
-            current + interest + _amount <= maxBorrow,
-            "Insufficient collateral"
-        );
+        require(current + _amount <= maxBorrow, "Insufficient collateral");
     }
 
     function validateRepay(
@@ -99,9 +81,8 @@ library BorrowLogic {
         address _destinationToken,
         uint256 _amount,
         address _user
-    ) internal view returns (uint256 interest) {
+    ) internal view {
         require(_amount > 0, "Invalid repay amount");
-        interest = accruedInterest(self, _user, _destinationToken);
         require(
             self.borrowings[_user][_destinationToken] >= _amount,
             "Repay exceeds borrowed amount"
@@ -116,8 +97,7 @@ library BorrowLogic {
         for (uint256 i = 0; i < tokenStorage.allDestinationTokens.length; i++) {
             address destToken = tokenStorage.allDestinationTokens[i];
             if (!tokenStorage.allowedTokens[destToken].isBorrowable) continue;
-            uint256 debt = self.borrowings[_user][destToken] +
-                accruedInterest(self, _user, destToken);
+            uint256 debt = self.borrowings[_user][destToken];
             if (debt > 0) return true;
         }
         return false;

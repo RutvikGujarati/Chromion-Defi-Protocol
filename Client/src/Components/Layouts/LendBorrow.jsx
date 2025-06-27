@@ -8,9 +8,13 @@ import YourSupplies from "./YourSupplies";
 import YourBorrows from "./YourBorrows";
 import Lender from "./Lender";
 import Borrower from "./Borrow";
+import PROTOCOL_ABI from "../../ABI/LenderABI.json";
+import FUJI_PROTOCOL_ABI from "../../ABI/ProtocolReceiver.json";
 import { Web3Context } from "../../Context/Protocol";
 import ParticlesBg from "../../Animation/ParticlesBg";
 import { MUSDC_TOKEN_ADDRESS, USDC_TOKEN_ADDRESS } from "../../ContractAddress";
+import { ethers } from "ethers";
+import { useAccount } from "wagmi";
 
 const LendBorrow = () => {
   const {
@@ -29,6 +33,7 @@ const LendBorrow = () => {
   } = useContext(Web3Context);
 
   const { openChainModal } = useChainModal();
+  const { address } = useAccount();
 
   const [supplyAmount, setSupplyAmount] = useState("");
   const [borrowAmount, setBorrowAmount] = useState("");
@@ -37,6 +42,14 @@ const LendBorrow = () => {
   const [selectedAsset, setSelectedAsset] = useState(null);
   const [maxBorrow, setMaxBorrow] = useState("0");
   const [walletBalance, setWalletBalance] = useState("0");
+
+  const [txSuccess, setTxSuccess] = useState(false);
+  const [messageId, setMessageId] = useState("");
+  const [eventData, setEventData] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const ifaceFuji = new ethers.Interface(FUJI_PROTOCOL_ABI);
+  const ifaceSepolia = new ethers.Interface(PROTOCOL_ABI);
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -75,25 +88,79 @@ const LendBorrow = () => {
   };
 
   const handleSupplyConfirm = async () => {
+    setIsProcessing(true);
     try {
       const tx = await deposit(USDC_TOKEN_ADDRESS, supplyAmount);
-      await tx.wait();
+      const receipt = await tx.wait();
+
+      // Parse logs for MessageSent event
+      const logs = receipt.logs
+        .map((log) => {
+          try {
+            return ifaceFuji.parseLog(log);
+          } catch (e) {
+            console.log(e);
+            return null;
+          }
+        })
+        .filter((parsed) => parsed?.name === "MessageSent");
+
+      if (logs.length > 0) {
+        const event = logs[0];
+        setMessageId(event.args.messageId);
+        setEventData({
+          protocolContract: event.args.protocolContract,
+          token: event.args._token,
+          amount: event.args._amount.toString(),
+        });
+      }
+
       setShowSupplyModal(false);
       const info = await getUserTokenInfo(USDC_TOKEN_ADDRESS);
       setWalletBalance(info.walletBalance);
+      setTxSuccess(true);
     } catch (error) {
       console.error("Supply error:", error);
+    } finally {
+      setIsProcessing(false);
     }
   };
 
   const handleBorrowConfirm = async () => {
+    setIsProcessing(true);
     try {
       const tx = await borrow(MUSDC_TOKEN_ADDRESS, borrowAmount);
-      if (!tx) return; // Already handled inside `borrow`
-      await tx.wait();
+      if (!tx) return;
+      const receipt = await tx.wait();
+
+      // Parse MessageSent
+      const logs = receipt.logs
+        .map((log) => {
+          try {
+            return ifaceSepolia.parseLog(log);
+          } catch (e) {
+            console.log(e);
+            return null;
+          }
+        })
+        .filter((parsed) => parsed?.name === "MessageSent");
+
+      if (logs.length > 0) {
+        const event = logs[0];
+        setMessageId(event.args.messageId);
+        setEventData({
+          protocolContract: event.args.protocolContract,
+          token: event.args._token,
+          amount: event.args._amount.toString(),
+        });
+      }
+
+      setTxSuccess(true);
       setShowBorrowModal(false);
     } catch (error) {
       console.error("Borrow error:", error);
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -101,7 +168,6 @@ const LendBorrow = () => {
     {
       symbol: "USDC",
       balance: walletBalance,
-      apy: "10%",
       collateral: true,
       icon: "/usdc.png",
     },
@@ -111,7 +177,6 @@ const LendBorrow = () => {
     {
       symbol: "mUSDC",
       available: maxBorrow,
-      apy: "10%",
       icon: "/usdc.png",
     },
   ];
@@ -202,12 +267,58 @@ const LendBorrow = () => {
             <p>Collateralization: Enabled</p>
           </div>
           <button
-            className="btn btn-gradient w-100 mt-3 py-1"
+            className="btn btn-gradient w-100 mt-3 py-1 d-flex align-items-center justify-content-center"
             onClick={handleSupplyConfirm}
-            disabled={chain !== FUJI_CHAIN_ID}
+            disabled={chain !== FUJI_CHAIN_ID || isProcessing}
           >
-            {chain !== FUJI_CHAIN_ID ? "Wrong Network" : "Confirm Supply"}
+            {chain !== FUJI_CHAIN_ID ? (
+              "Wrong Network"
+            ) : isProcessing ? (
+              <>
+                <span
+                  className="spinner-border spinner-border-sm me-2"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+                Processing...
+              </>
+            ) : (
+              "Confirm Supply"
+            )}
           </button>
+        </Modal.Body>
+      </Modal>
+
+      <Modal show={txSuccess} onHide={() => setTxSuccess(false)} centered>
+        <Modal.Header
+          closeButton
+          className="bg-dark text-light border-secondary"
+        >
+          <Modal.Title>✅ Transaction Complete</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="bg-dark text-light border-secondary">
+          <p></p>
+          <code className="small">{messageId}</code>
+
+          {eventData && (
+            <>
+              <p className="mt-3 mb-1">
+                <strong>Token:</strong> {eventData.token}
+              </p>
+              <p className="mb-1">
+                <strong>Amount:</strong> {eventData.amount}
+              </p>
+            </>
+          )}
+
+          <a
+            href={`https://ccip.chain.link/address/${address}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-outline-info w-100 mt-3"
+          >
+            View on CCIP Explorer ↗
+          </a>
         </Modal.Body>
       </Modal>
 
@@ -252,9 +363,26 @@ const LendBorrow = () => {
           <button
             className="btn btn-gradient w-100 mt-3 py-1"
             onClick={handleBorrowConfirm}
-            disabled={chain !== SEPOLIA_CHAIN_ID || parseFloat(maxBorrow) === 0}
+            disabled={
+              chain !== SEPOLIA_CHAIN_ID ||
+              isProcessing ||
+              parseFloat(maxBorrow) === 0
+            }
           >
-            Confirm Borrow
+            {chain !== SEPOLIA_CHAIN_ID ? (
+              "Wrong Network"
+            ) : isProcessing ? (
+              <>
+                <span
+                  className="spinner-border spinner-border-sm me-2"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+                Processing...
+              </>
+            ) : (
+              "Confirm Borrow"
+            )}
           </button>
         </Modal.Body>
       </Modal>

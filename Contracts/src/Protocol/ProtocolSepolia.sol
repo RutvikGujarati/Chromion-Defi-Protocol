@@ -42,7 +42,11 @@ contract CrossChainProtocol is
 
     TokenManager.TokenStorage private tokenStorage;
     BorrowLogic.BorrowStorage private BorrowStorage;
-    enum ActionType { Deposit, Withdraw, DebtUpdate }
+    enum ActionType {
+        Deposit,
+        Withdraw,
+        DebtUpdate
+    }
 
     event TokensReceived(
         bytes32 messageId,
@@ -165,27 +169,25 @@ contract CrossChainProtocol is
         address _destinationToken,
         uint256 _amount
     ) external nonReentrant whenNotPaused {
-        (uint256 current, uint256 interest) = BorrowStorage.validateBorrow(
+        uint256 current = BorrowStorage.validateBorrow(
             tokenStorage,
             _destinationToken,
             _amount,
             msg.sender
         );
 
-        if (interest > 0) {
-            BorrowStorage.borrowings[msg.sender][_destinationToken] =
-                current +
-                interest +
-                _amount;
-        } else {
-            BorrowStorage.borrowings[msg.sender][_destinationToken] =
-                current +
-                _amount;
-        }
+        BorrowStorage.borrowings[msg.sender][_destinationToken] =
+            current +
+            _amount;
 
         BorrowStorage.borrowTimestamps[msg.sender][_destinationToken] = block
             .timestamp;
-        IMintableERC20(_destinationToken).mint(msg.sender, _amount);
+        require(
+            IERC20(_destinationToken).balanceOf(address(this)) >= _amount,
+            "insufficient borrow amount in contract wait for owner to provide liquidity"
+        );
+        IERC20(_destinationToken).safeTransfer(msg.sender, _amount);
+
         emit Borrowed(msg.sender, _destinationToken, _amount);
     }
 
@@ -194,31 +196,22 @@ contract CrossChainProtocol is
         address _destinationToken,
         uint256 _amount
     ) external nonReentrant whenNotPaused {
-        uint256 interest = BorrowStorage.validateRepay(
-            _destinationToken,
-            _amount,
-            msg.sender
-        );
-        if (interest > 0) {
-            BorrowStorage.borrowings[msg.sender][_destinationToken] += interest;
-        }
+        BorrowStorage.validateRepay(_destinationToken, _amount, msg.sender);
 
         BorrowStorage.borrowings[msg.sender][_destinationToken] -= _amount;
-        BorrowStorage.borrowTimestamps[msg.sender][_destinationToken] = block
-            .timestamp;
 
         IERC20(_destinationToken).safeTransferFrom(
             msg.sender,
             address(this),
             _amount
         );
-        IMintableERC20(_destinationToken).burn(_amount);
         emit Repaid(msg.sender, _destinationToken, _amount);
 
         bool hasDebt = BorrowStorage.hasOutstandingDebt(
             tokenStorage,
             msg.sender
         );
+
         Client.EVM2AnyMessage memory message = Client.EVM2AnyMessage({
             receiver: abi.encode(lenderContract),
             data: abi.encode(uint8(ActionType.DebtUpdate), msg.sender, hasDebt),
@@ -276,9 +269,7 @@ contract CrossChainProtocol is
         address user,
         address token
     ) external view returns (uint256) {
-        return
-            BorrowStorage.borrowings[user][token] +
-            BorrowStorage.accruedInterest(user, token);
+        return BorrowStorage.borrowings[user][token];
     }
 
     function pause() external onlyOwner {

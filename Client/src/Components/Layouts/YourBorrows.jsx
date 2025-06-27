@@ -92,7 +92,7 @@ const YourBorrows = ({ borrows, onRepay }) => {
                   onChange={(e) => setWithdrawAmount(e.target.value)}
                   max={selectedAsset?.amount}
                 />
-                <div className="mt-2 text-muted">
+                <div className="mt-2 ">
                   Max: {selectedAsset?.amount} {selectedAsset?.symbol}
                 </div>
               </div>

@@ -115,6 +115,17 @@ export const Web3Provider = ({ children }) => {
       throw new Error("Switch to Fuji");
     }
     const amountWei = ethers.parseUnits(amount.toString(), 6);
+    const token = new ethers.Contract(
+      USDC_TOKEN_ADDRESS,
+      tokenAbi,
+      await provider.getSigner()
+    );
+    const allowance = await token.allowance(address, LENDER_CONTRACT_ADDRESS);
+    if (allowance < amountWei) {
+      const approveTx = await token.approve(LENDER_CONTRACT_ADDRESS, amountWei);
+      await approveTx.wait();
+    }
+
     const tx = await lenderContract.deposit(tokenAddress, amountWei);
     await tx.wait();
     return tx;
@@ -145,20 +156,6 @@ export const Web3Provider = ({ children }) => {
       tokenAddress
     );
     if (amountWei > maxBorrow) throw new Error("Amount exceeds limit");
-
-    const token = new ethers.Contract(
-      MUSDC_TOKEN_ADDRESS,
-      tokenAbi,
-      await provider.getSigner()
-    );
-    const allowance = await token.allowance(address, PROTOCOL_CONTRACT_ADDRESS);
-    if (allowance < amountWei) {
-      const approveTx = await token.approve(
-        PROTOCOL_CONTRACT_ADDRESS,
-        amountWei
-      );
-      await approveTx.wait();
-    }
 
     const tx = await protocolContract.borrow(tokenAddress, amountWei);
     await tx.wait();

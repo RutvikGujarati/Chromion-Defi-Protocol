@@ -119,3 +119,28 @@ input[type="number"] {
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
 }
+.glass-card-custom {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+.modal-content {
+  background: rgba(18, 18, 18, 0.9);
+  border-radius: 1rem;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-gradient {
+  background: linear-gradient(to right, #5f72be, #9b23ea);
+  border: none;
+  color: white;
+  font-weight: 600;
+  border-radius: 30px;
+}
+
+.btn-gradient:hover {
+  opacity: 0.9;
+}

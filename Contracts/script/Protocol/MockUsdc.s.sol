@@ -17,5 +17,5 @@ contract DeployMockUSDC is Script {
         vm.stopBroadcast();
     }
 }
-//fuji - 0x2B87F21e0302bB4D42197BeD902d310C385C6972
-//sepoli - 0xfe74510FD401Fb37b47CE4761ED3977f0Da17e12
+//fuji - 0x27eE91d6aA1E1EAa7F5bfe86069d4f97a3d7D752
+//sepoli - 0x47E951BD25d2CC69C0264458E1da1C639f8751b4
